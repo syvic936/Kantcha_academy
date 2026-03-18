@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modules & Formations | Kantcha</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#FF6B6B;--accent2:#FFD93D;--black:#0F0A0A;--black-mid:#1A1010;--black-soft:#221515;--green:#1DB954;--white:#FFF8F8;--gray:#9A8080;--border:rgba(255,107,107,0.15);--fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--fb);overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(15,10,10,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--green);text-decoration:none}
+.nav-logo span{color:var(--white)}
+.nav-back{color:var(--gray);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color 0.2s}
+.nav-back:hover{color:var(--accent)}
+.nav-cta{background:var(--accent);color:var(--white);padding:10px 22px;border-radius:6px;font-weight:500;font-size:14px;text-decoration:none;transition:all 0.2s}
+.nav-cta:hover{background:#ff8e8e;transform:translateY(-1px)}
+
+/* HERO — mosaique de modules en arrière-plan */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:140px 48px 80px;position:relative;overflow:hidden}
+.hero-mosaic{position:absolute;right:-40px;top:0;bottom:0;width:45%;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:120px 40px 80px;opacity:0.06;pointer-events:none}
+.mosaic-tile{background:var(--white);border-radius:12px}
+.hero-glow{position:absolute;top:-100px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(255,107,107,0.08) 0%,transparent 65%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,107,0.1);border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-size:12px;color:var(--accent);font-weight:500;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:28px;width:fit-content;animation:fadeUp 0.6s ease both}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.hero h1{font-family:var(--fd);font-size:clamp(46px,7vw,84px);font-weight:800;line-height:0.92;letter-spacing:-0.03em;max-width:700px;animation:fadeUp 0.7s 0.1s ease both}
+.hero h1 .accent{color:var(--accent)}
+.hero h1 .accent2{color:var(--accent2)}
+.hero-sub{font-size:17px;color:var(--gray);max-width:500px;margin-top:24px;font-weight:300;line-height:1.75;animation:fadeUp 0.7s 0.2s ease both}
+.hero-actions{display:flex;gap:16px;margin-top:36px;flex-wrap:wrap;animation:fadeUp 0.7s 0.3s ease both}
+.btn-primary{background:var(--accent);color:var(--white);border:none;padding:16px 32px;border-radius:8px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all 0.2s}
+.btn-primary:hover{background:#ff8e8e;transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,107,107,0.25)}
+.btn-secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.15);padding:16px 32px;border-radius:8px;font-family:var(--fb);font-size:15px;cursor:pointer;text-decoration:none;transition:all 0.2s}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.hero-count{display:flex;gap:40px;margin-top:48px;padding-top:40px;border-top:1px solid var(--border);animation:fadeUp 0.7s 0.4s ease both}
+.count-item .num{font-family:var(--fd);font-size:32px;font-weight:800;color:var(--accent);line-height:1}
+.count-item .lbl{font-size:12px;color:var(--gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.06em}
+
+.section-label{font-size:11px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.section-title{font-family:var(--fd);font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-0.03em;line-height:1.05}
+.section-title .accent{color:var(--accent)}
+.section-title .accent2{color:var(--accent2)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* MODULES CATALOGUE */
+.catalogue{padding:100px 48px;background:var(--black-mid);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.catalogue-inner{max-width:1200px;margin:0 auto}
+.cat-filter{display:flex;gap:10px;flex-wrap:wrap;margin:32px 0 40px}
+.cat-btn{padding:8px 18px;border-radius:100px;border:1px solid var(--border);font-size:13px;cursor:pointer;transition:all 0.2s;color:var(--gray);background:transparent}
+.cat-btn.active,.cat-btn:hover{background:var(--accent);color:var(--white);border-color:var(--accent)}
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.mod-card{background:var(--black);border:1px solid var(--border);border-radius:14px;padding:28px;transition:all 0.25s;cursor:pointer}
+.mod-card:hover{transform:translateY(-5px);border-color:var(--accent)}
+.mod-emoji{font-size:32px;margin-bottom:16px;display:block}
+.mod-cat{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.mod-card h3{font-family:var(--fd);font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.2}
+.mod-card p{color:var(--gray);font-size:13px;line-height:1.65;font-weight:300}
+.mod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.mod-format{font-size:11px;color:var(--gray)}
+.mod-tag{font-size:11px;color:var(--accent);background:rgba(255,107,107,0.1);padding:3px 10px;border-radius:100px;font-weight:500}
+
+/* POURQUOI */
+.pourquoi{padding:100px 48px;max-width:1100px;margin:0 auto}
+.pourquoi-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:48px}
+.pourquoi-items{display:flex;flex-direction:column;gap:24px}
+.pitem{display:flex;gap:20px;align-items:flex-start}
+.pitem-icon{width:44px;height:44px;background:rgba(255,107,107,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pitem h4{font-family:var(--fd);font-size:16px;font-weight:700;margin-bottom:4px}
+.pitem p{color:var(--gray);font-size:14px;line-height:1.65;font-weight:300}
+.pourquoi-visual{background:var(--black-soft);border:1px solid var(--border);border-radius:16px;padding:36px;position:relative;overflow:hidden}
+.pourquoi-visual::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.process-step{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.process-step:last-child{border-bottom:none}
+.ps-num{width:32px;height:32px;border-radius:50%;background:rgba(255,107,107,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0}
+.ps-text h5{font-size:14px;font-weight:500;margin-bottom:2px}
+.ps-text p{font-size:12px;color:var(--gray);font-weight:300}
+
+/* FORMATEUR */
+.formateur{padding:100px 48px;background:var(--black-mid);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.formateur-inner{max-width:900px;margin:0 auto;text-align:center}
+.formateur-avatar{width:100px;height:100px;border-radius:50%;background:var(--black-soft);border:2px solid var(--border);margin:0 auto 24px;display:flex;align-items:center;justify-content:center;font-size:40px}
+.formateur h3{font-family:var(--fd);font-size:28px;font-weight:800;margin-bottom:6px}
+.formateur .role{color:var(--accent);font-size:14px;font-weight:500;letter-spacing:0.04em;margin-bottom:20px}
+.formateur p{color:var(--gray);font-size:16px;line-height:1.8;font-weight:300;max-width:620px;margin:0 auto}
+
+/* FAQ */
+.faq{padding:100px 48px;max-width:800px;margin:0 auto}
+.faq-items{margin-top:48px}
+.faq-item{border-bottom:1px solid var(--border);padding:20px 0;cursor:pointer}
+.faq-q{display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:500;color:var(--white)}
+.faq-icon{color:var(--accent);font-size:20px;transition:transform 0.2s;min-width:20px}
+.faq-a{color:var(--gray);font-size:14px;line-height:1.7;font-weight:300;margin-top:14px;display:none}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-item.open .faq-a{display:block}
+
+/* CTA */
+.cta{padding:120px 48px;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,107,107,0.07),transparent 70%);pointer-events:none}
+.cta h2{font-family:var(--fd);font-size:clamp(34px,5.5vw,64px);font-weight:800;letter-spacing:-0.03em;line-height:1;margin-bottom:20px;position:relative;z-index:1}
+.cta p{color:var(--gray);font-size:17px;font-weight:300;margin-bottom:40px;position:relative;z-index:1}
+.cta .actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--green)}
+.footer-logo span{color:var(--white)}
+footer p{color:var(--gray);font-size:13px}
+
+@media(max-width:768px){nav{padding:16px 24px}.hero{padding:120px 24px 60px}.hero-mosaic{display:none}.catalogue,.pourquoi,.formateur,.faq,.cta{padding:72px 24px}.pourquoi-grid{grid-template-columns:1fr}footer{flex-direction:column;text-align:center;padding:32px 24px}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="nav-back">← Kantcha</a>
+  <a href="/" class="nav-logo">Kant<span>cha</span></a>
+  <a href="#inscription" class="nav-cta">S'inscrire</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-mosaic">
+    <div class="mosaic-tile" style="height:120px"></div>
+    <div class="mosaic-tile" style="height:80px;margin-top:40px"></div>
+    <div class="mosaic-tile" style="height:100px"></div>
+    <div class="mosaic-tile" style="height:140px;margin-top:20px"></div>
+    <div class="mosaic-tile" style="height:90px"></div>
+    <div class="mosaic-tile" style="height:110px;margin-top:30px"></div>
+  </div>
+  <div class="hero-glow"></div>
+  <div class="hero-badge">🧩 Modules à la carte · Tous niveaux</div>
+  <h1>Apprends ce qui<br>change <span class="accent">ta vie.</span><br><span class="accent2">Dès aujourd'hui.</span></h1>
+  <p class="hero-sub">Une bibliothèque de modules pratiques sur l'entrepreneuriat, les finances, la productivité, le digital et bien plus. Choisis. Apprends. Applique.</p>
+  <div class="hero-actions">
+    <a href="#catalogue" class="btn-primary">Explorer les modules <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="#inscription" class="btn-secondary">S'inscrire</a>
+  </div>
+  <div class="hero-count">
+    <div class="count-item"><div class="num">8+</div><div class="lbl">Thèmes disponibles</div></div>
+    <div class="count-item"><div class="num">100%</div><div class="lbl">Actionnable</div></div>
+    <div class="count-item"><div class="num">∞</div><div class="lbl">À ton rythme</div></div>
+  </div>
+</section>
+
+<section class="catalogue" id="catalogue">
+  <div class="catalogue-inner">
+    <div class="reveal">
+      <p class="section-label">Catalogue de modules</p>
+      <h2 class="section-title">Tout ce qu'il te faut <span class="accent">apprendre.</span></h2>
+    </div>
+    <div class="cat-filter">
+      <button class="cat-btn active">Tous</button>
+      <button class="cat-btn">Business</button>
+      <button class="cat-btn">Finance</button>
+      <button class="cat-btn">Digital</button>
+      <button class="cat-btn">Développement perso</button>
+    </div>
+    <div class="modules-grid">
+      <div class="mod-card reveal"><span class="mod-emoji">🚀</span><div class="mod-cat">Business</div><h3>Entrepreneuriat & création d'entreprise</h3><p>De l'idée au business plan : structure ton projet, valide ton marché et lance avec méthode.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + PDF</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">💰</span><div class="mod-cat">Finance</div><h3>Finances personnelles & budget</h3><p>Maîtrise ton budget, élimine les dettes et construis une épargne solide mois après mois.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + Outil</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">⚡</span><div class="mod-cat">Développement perso</div><h3>Productivité & gestion du temps</h3><p>Méthodes GTD, time blocking, outils de productivité. Fais plus avec moins d'effort et de stress.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + Fiches</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">🤖</span><div class="mod-cat">Digital</div><h3>Outils digitaux & intelligence artificielle</h3><p>Utilise l'IA et les outils no-code pour automatiser, créer et gagner en efficacité au quotidien.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + Tutos</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">📱</span><div class="mod-cat">Digital</div><h3>Marketing digital & réseaux sociaux</h3><p>Stratégie de contenu, croissance organique, publicité — construis une présence digitale qui convertit.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + Guide</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">🎤</span><div class="mod-cat">Développement perso</div><h3>Communication & prise de parole</h3><p>Exprime-toi avec clarté et impact — en réunion, en public, en entretien ou devant une caméra.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + Exercices</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">👑</span><div class="mod-cat">Business</div><h3>Leadership & management</h3><p>Développe ton leadership naturel, apprends à motiver une équipe et à prendre de meilleures décisions.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + PDF</span><span class="mod-tag">Boutique Chariow</span></div></div>
+      <div class="mod-card reveal"><span class="mod-emoji">🧠</span><div class="mod-cat">Développement perso</div><h3>Développement personnel & mindset</h3><p>Brise les croyances limitantes, cultive la discipline et programme ton mental pour réussir.</p><div class="mod-footer"><span class="mod-format">📹 Vidéo + Journal</span><span class="mod-tag">Boutique Chariow</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="pourquoi">
+  <div class="pourquoi-grid">
+    <div class="pourquoi-items reveal">
+      <p class="section-label">Pourquoi ces modules</p>
+      <h2 class="section-title" style="margin-bottom:32px">Conçus pour <span class="accent2">l'action,</span><br>pas la théorie.</h2>
+      <div class="pitem"><div class="pitem-icon">🎯</div><div><h4>Directement applicable</h4><p>Chaque module contient des exercices pratiques et des outils prêts à l'emploi. Tu appliques dès le lendemain.</p></div></div>
+      <div class="pitem"><div class="pitem-icon">⏱</div><div><h4>À ton rythme</h4><p>Accède aux ressources quand tu veux, depuis ton téléphone ou ton ordinateur. Aucune contrainte horaire.</p></div></div>
+      <div class="pitem"><div class="pitem-icon">🔗</div><div><h4>Modules complémentaires</h4><p>Les modules se combinent entre eux. Tu peux construire un vrai parcours sur-mesure selon tes besoins du moment.</p></div></div>
+    </div>
+    <div class="pourquoi-visual reveal">
+      <h4 style="font-family:var(--fd);font-size:17px;font-weight:700;margin-bottom:24px">Comment ça marche</h4>
+      <div class="process-step"><div class="ps-num">1</div><div class="ps-text"><h5>Tu t'inscris via Google Forms</h5><p>Indique les modules qui t'intéressent</p></div></div>
+      <div class="process-step"><div class="ps-num">2</div><div class="ps-text"><h5>Tu accèdes au contenu</h5><p>Sessions live ou ressources asynchrones selon le module</p></div></div>
+      <div class="process-step"><div class="ps-num">3</div><div class="ps-text"><h5>Tu achètes les ressources digitales</h5><p>Guides, outils et templates sur la boutique Chariow</p></div></div>
+      <div class="process-step"><div class="ps-num">4</div><div class="ps-text"><h5>Tu appliques et tu progresses</h5><p>Accès au groupe de suivi et aux replays</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="formateur">
+  <div class="formateur-inner reveal">
+    <p class="section-label">Créé par</p>
+    <div class="formateur-avatar">👤</div>
+    <h3>Le Fondateur Kantcha</h3>
+    <p class="role">Formateur · Créateur de contenu éducatif</p>
+    <p>Chaque module est conçu pour être immédiatement utile. J'ai voulu créer des formations que j'aurais aimé avoir moi-même — pratiques, directes, sans remplissage.</p>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="reveal">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">Tes <span class="accent">questions.</span></h2>
+  </div>
+  <div class="faq-items">
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Puis-je m'inscrire à plusieurs modules en même temps ? <span class="faq-icon">+</span></div><div class="faq-a">Oui ! Tu peux choisir autant de modules que tu veux dans le formulaire d'inscription. Nous organiserons ton accès en fonction de tes choix.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Les modules sont-ils disponibles en replay ? <span class="faq-icon">+</span></div><div class="faq-a">Oui, les sessions live sont enregistrées et accessibles en replay. Les ressources digitales (guides, PDF, outils) sont disponibles immédiatement après achat sur Chariow.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Comment se passe l'achat des ressources ? <span class="faq-icon">+</span></div><div class="faq-a">Toutes les ressources digitales liées aux modules sont disponibles sur notre boutique Chariow. Tu peux les acheter indépendamment de l'inscription aux sessions. Paiement sécurisé, accès immédiat.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Y a-t-il de nouveaux modules régulièrement ? <span class="faq-icon">+</span></div><div class="faq-a">Oui ! Le catalogue s'enrichit régulièrement. En t'inscrivant, tu seras notifié(e) en priorité des nouveaux modules disponibles.</div></div>
+  </div>
+</section>
+
+<section class="cta" id="inscription">
+  <div class="reveal">
+    <h2>Commence à<br>apprendre <span style="color:var(--accent)">maintenant.</span></h2>
+    <p>Inscris-toi aux modules qui t'intéressent et accède aux ressources sur Chariow.</p>
+    <div class="actions">
+      <a href="#" class="btn-primary">S'inscrire aux modules <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#" class="btn-secondary">Boutique Chariow</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Kant<span>cha</span></div>
+  <p>© 2025 Kantcha · Modules & Formations</p>
+  <a href="../index.html" style="color:var(--gray);font-size:13px;text-decoration:none">← Retour à l'accueil</a>
+</footer>
+<script>
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');obs.unobserve(el.target)}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
