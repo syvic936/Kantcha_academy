@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kantcha — Investis en toi</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1DB954;
+    --green-dark: #15803D;
+    --green-deep: #0A3D1F;
+    --black: #080C08;
+    --black-mid: #111811;
+    --black-soft: #1A221A;
+    --white: #F4F7F4;
+    --gray: #8A9A8A;
+    --border: rgba(29,185,84,0.18);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(8,12,8,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--green);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--white); }
+
+  nav ul {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  nav ul a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--green); }
+
+  .nav-cta {
+    background: var(--green);
+    color: var(--black) !important;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 14px !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+
+  .nav-cta:hover { background: #22d460 !important; transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(29,185,84,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29,185,84,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(29,185,84,0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(29,185,84,0.1);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 32px;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero h1 .accent { color: var(--green); }
+
+  .hero h1 .outline {
+    -webkit-text-stroke: 2px var(--green);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--gray);
+    max-width: 560px;
+    margin-top: 28px;
+    font-weight: 300;
+    line-height: 1.7;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 44px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--black);
+    border: none;
+    padding: 16px 36px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: #22d460;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(29,185,84,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 16px 36px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--green);
+    color: var(--green);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 72px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+
+  .stat-item {}
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 6px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  .section-title .accent { color: var(--green); }
+
+  /* ─── ABOUT ─── */
+  .about {
+    padding: 120px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .about-text p {
+    color: var(--gray);
+    margin-top: 20px;
+    font-size: 17px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .about-text p strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .about-card {
+    background: var(--black-soft);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--green), transparent);
+  }
+
+  .about-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .about-card h3 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .about-card p {
+    color: var(--gray);
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .about-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ─── PROGRAMMES ─── */
+  .programmes {
+    padding: 120px 48px;
+    background: var(--black-mid);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .programmes-header {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+  }
+
+  .programmes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .prog-card {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    color: var(--white);
+  }
+
+  .prog-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60%;
+    background: radial-gradient(ellipse at bottom, rgba(29,185,84,0.06), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .prog-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--green);
+    box-shadow: 0 20px 60px rgba(29,185,84,0.12);
+  }
+
+  .prog-card:hover::after { opacity: 1; }
+
+  .prog-card.featured {
+    border-color: var(--green);
+    background: var(--green-deep);
+  }
+
+  .prog-card.featured .prog-badge {
+    background: var(--green);
+    color: var(--black);
+  }
+
+  .prog-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(29,185,84,0.12);
+    color: var(--green);
+    border-radius: 100px;
+    padding: 4px 12px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+
+  .prog-icon {
+    font-size: 36px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .prog-card h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .prog-card p {
+    color: var(--gray);
+    font-size: 14px;
+    line-height: 1.7;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .prog-card.featured p { color: rgba(244,247,244,0.7); }
+
+  .prog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .prog-footer .prog-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: gap 0.2s;
+  }
+
+  .prog-card:hover .prog-link { gap: 10px; }
+
+  .prog-tag {
+    font-size: 11px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .how {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 60px;
+    position: relative;
+  }
+
+  .how-steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green), var(--green), transparent);
+    opacity: 0.3;
+  }
+
+  .how-step {
+    padding: 0 24px;
+    position: relative;
+  }
+
+  .step-num {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--black-soft);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .how-step h4 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .how-step p {
+    color: var(--gray);
+    font-size: 14px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ─── TESTIMONIAL / TRUST ─── */
+  .trust {
+    padding: 100px 48px;
+    background: var(--black-mid);
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .trust-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .trust blockquote {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin: 28px 0;
+  }
+
+  .trust blockquote .accent { color: var(--green); }
+
+  .trust-author {
+    font-size: 14px;
+    color: var(--gray);
+    font-weight: 300;
+  }
+
+  /* ─── CTA FINAL ─── */
+  .cta-section {
+    padding: 120px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(29,185,84,0.09), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-section p {
+    color: var(--gray);
+    font-size: 18px;
+    font-weight: 300;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-section .btn-primary {
+    font-size: 18px;
+    padding: 20px 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--green);
+  }
+
+  .footer-logo span { color: var(--white); }
+
+  footer p {
+    color: var(--gray);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--green); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .hero-stats { flex-wrap: wrap; gap: 28px; }
+    .about { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+    .about-cards-grid { grid-template-columns: 1fr; }
+    .programmes { padding: 80px 24px; }
+    .how { padding: 80px 24px; }
+    .how-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .how-steps::before { display: none; }
+    .trust { padding: 80px 24px; }
+    .cta-section { padding: 80px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Kant<span>cha</span></a>
+  <ul>
+    <li><a href="#programmes">Programmes</a></li>
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#programmes" class="nav-cta">Commencer</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-badge">
+    ✦ Formation · Coaching · Accompagnement
+  </div>
+
+  <h1>
+    Investis<br>
+    en <span class="accent">toi.</span><br>
+    <span class="outline">Récolte demain.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Kantcha est un label de formation et de coaching conçu pour t'outiller, te guider et t'accompagner vers la réussite — sur les marchés financiers, l'immobilier, l'insertion professionnelle et au-delà.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#programmes" class="btn-primary">
+      Découvrir les programmes
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="#comment" class="btn-secondary">Comment ça marche</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Programmes actifs</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Pratique & orienté résultat</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Possibilités</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-text reveal">
+    <p class="section-label">Notre vision</p>
+    <h2 class="section-title">Un label bâti pour <span class="accent">te faire progresser.</span></h2>
+    <p>
+      Kantcha, c'est plus qu'une plateforme de formation. C'est un <strong>écosystème d'apprentissage</strong> pensé pour les ambitieux qui veulent prendre leur avenir en main — avec les bonnes connaissances, les bons outils et le bon accompagnement.
+    </p>
+    <p style="margin-top: 16px;">
+      Chaque programme est conçu pour être <strong>actionnable dès le premier jour.</strong> Pas de théorie creuse — uniquement des compétences qui changent ta trajectoire.
+    </p>
+  </div>
+
+  <div class="about-visual reveal">
+    <div class="about-cards-grid">
+      <div class="about-card">
+        <span class="about-icon">📈</span>
+        <h3>Marchés financiers</h3>
+        <p>Comprends et investis sur la BRVM avec méthode.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-icon">🏠</span>
+        <h3>Immobilier</h3>
+        <p>Stratégies d'investissement et accompagnement terrain.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-icon">💼</span>
+        <h3>Carrière</h3>
+        <p>Coaching d'insertion et développement professionnel.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-icon">🎯</span>
+        <h3>Produits digitaux</h3>
+        <p>Accède aux ressources et modules en ligne.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMMES -->
+<section class="programmes" id="programmes">
+  <div class="programmes-header reveal">
+    <p class="section-label">Nos programmes</p>
+    <h2 class="section-title">Choisis ton <span class="accent">chemin.</span></h2>
+  </div>
+
+  <div class="programmes-grid">
+
+    <!-- BRVM -->
+    <a href="#" class="prog-card featured reveal">
+      <span class="prog-badge">🔥 En cours</span>
+      <span class="prog-icon">📊</span>
+      <h3>Marché BRVM</h3>
+      <p>Maîtrise la Bourse Régionale des Valeurs Mobilières d'Afrique de l'Ouest. Analyse fondamentale, technique, gestion de portefeuille et stratégies d'investissement adaptées au marché africain.</p>
+      <div class="prog-footer">
+        <a href="#" class="prog-link">
+          Voir le programme
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="prog-tag">Finance</span>
+      </div>
+    </a>
+
+    <!-- IMMOBILIER -->
+    <a href="#" class="prog-card reveal">
+      <span class="prog-badge">Coaching</span>
+      <span class="prog-icon">🏗️</span>
+      <h3>Marché Immobilier</h3>
+      <p>Formation complète sur l'investissement immobilier : évaluation de biens, rentabilité, financement, négociation et gestion locative. Accompagnement personnalisé pour tes premiers projets.</p>
+      <div class="prog-footer">
+        <a href="#" class="prog-link">
+          S'inscrire
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="prog-tag">Immobilier</span>
+      </div>
+    </a>
+
+    <!-- INSERTION PRO -->
+    <a href="#" class="prog-card reveal">
+      <span class="prog-badge">Coaching + Digital</span>
+      <span class="prog-icon">🚀</span>
+      <h3>Insertion Professionnelle</h3>
+      <p>Coaching individuel et collectif pour décrocher le poste de tes rêves. CV, LinkedIn, entretiens, personal branding — et accès à nos produits digitaux exclusifs pour aller plus loin.</p>
+      <div class="prog-footer">
+        <a href="#" class="prog-link">
+          S'inscrire
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="prog-tag">Carrière</span>
+      </div>
+    </a>
+
+    <!-- MODULES -->
+    <a href="#" class="prog-card reveal">
+      <span class="prog-badge">À la carte</span>
+      <span class="prog-icon">🧩</span>
+      <h3>Modules & Formations</h3>
+      <p>Une bibliothèque de modules sur des concepts variés : entrepreneuriat, finances personnelles, productivité, outils digitaux. Inscris-toi au thème qui te correspond et achète directement en ligne.</p>
+      <div class="prog-footer">
+        <a href="#" class="prog-link">
+          Explorer
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="prog-tag">Divers</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="comment">
+  <div class="how">
+    <div class="reveal">
+      <p class="section-label">Le processus</p>
+      <h2 class="section-title">Simple. <span class="accent">Efficace.</span></h2>
+    </div>
+
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="step-num">01</div>
+        <h4>Explore les programmes</h4>
+        <p>Parcours les programmes disponibles et identifie celui qui correspond à tes objectifs actuels.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="step-num">02</div>
+        <h4>Inscris-toi via Google Forms</h4>
+        <p>Remplis le formulaire d'inscription du programme choisi. Simple, rapide, sans friction.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="step-num">03</div>
+        <h4>Accède aux ressources</h4>
+        <p>Commande tes produits digitaux directement sur la boutique Chariow et reçois ton accès.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="step-num">04</div>
+        <h4>Progresse avec nous</h4>
+        <p>Suis les sessions de coaching, applique les stratégies et transforme tes compétences en résultats.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="trust-inner reveal">
+    <p class="section-label">Notre promesse</p>
+    <blockquote>
+      "Chaque connaissance acquise avec Kantcha est une <span class="accent">graine semée</span> pour ta liberté financière et professionnelle."
+    </blockquote>
+    <p class="trust-author">— L'équipe Kantcha</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="reveal">
+    <h2>Prêt à <span style="color:var(--green)">commencer ?</span></h2>
+    <p>Rejoins les participants qui construisent leur avenir avec Kantcha.</p>
+    <a href="#programmes" class="btn-primary">
+      Voir tous les programmes
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kant<span>cha</span></div>
+  <p>© 2025 Kantcha. Tous droits réservés.</p>
+  <div class="footer-links">
+    <a href="#">Programmes</a>
+    <a href="#">Boutique</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
